@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriGenie - Smart Farming Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .result-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .weather-current {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+        }
+
+        .weather-current h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+
+        .irrigation-info {
+            background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+            color: white;
+        }
+
+        .irrigation-info h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+
+        .varieties-info {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+        }
+
+        .varieties-info h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+
+        .weather-graph {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .weather-graph img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .forecast-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .forecast-day {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .forecast-day h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .forecast-day .temp {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .forecast-day .desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-transform: capitalize;
+        }
+
+        .ai-advice {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+        }
+
+        .ai-advice h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+
+        .ai-advice .content {
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        /* Enhanced formatting for AI responses */
+        .formatted-content {
+            line-height: 1.7;
+        }
+
+        .formatted-content h1,
+        .formatted-content h2 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 8px;
+            margin: 20px 0 15px 0;
+            font-weight: bold;
+        }
+
+        .formatted-content h3 {
+            color: white;
+            margin: 15px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .formatted-content .ai-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .formatted-content .ai-table td {
+            padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            vertical-align: top;
+        }
+
+        .formatted-content .ai-table tr:first-child td {
+            background: rgba(255,255,255,0.2);
+            font-weight: bold;
+            color: white;
+        }
+
+        .formatted-content .ai-table tr:nth-child(even) {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .formatted-content ul,
+        .formatted-content ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .formatted-content li {
+            margin: 5px 0;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .formatted-content strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .formatted-content em {
+            color: #ffd700;
+            font-style: italic;
+        }
+
+        .formatted-content p {
+            margin: 10px 0;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .formatted-content .highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .formatted-content .checkmark {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .formatted-content .emoji {
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+
+        .formatted-content blockquote {
+            border-left: 4px solid rgba(255,255,255,0.3);
+            margin: 15px 0;
+            padding-left: 15px;
+            font-style: italic;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .varieties-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .variety-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .input-section {
+                padding: 20px;
+            }
+            
+            .forecast-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 AgriGenie</h1>
+            <p>Your Smart Farming Assistant</p>
+        </div>
+
+        <div class="input-section">
+            <form id="analyzeForm">
+                <div class="form-group">
+                    <label for="region">Select Region:</label>
+                    <select id="region" name="region" required>
+                        <option value="">Choose your region</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Lucknow">Lucknow</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Bhopal">Bhopal</option>
+                        <option value="Patna">Patna</option>
+                        <option value="Raipur">Raipur</option>
+                        <option value="Indore">Indore</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="crop">Select Crop:</label>
+                    <select id="crop" name="crop" required>
+                        <option value="">Choose your crop</option>
+                        <option value="rice">Rice (चावल)</option>
+                        <option value="wheat">Wheat (गेहूं)</option>
+                        <option value="maize">Maize (मक्का)</option>
+                        <option value="sugarcane">Sugarcane (गन्ना)</option>
+                        <option value="cotton">Cotton (कपास)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="analyze-btn" id="analyzeBtn">
+                    🔍 Analyze My Crop
+                </button>
+            </form>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Analyzing your crop data...
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="results-section" id="resultsSection">
+            <!-- Current Weather -->
+            <div class="result-card weather-current" id="currentWeather">
+                <h3>🌤️ Current Weather</h3>
+                <div id="currentWeatherContent"></div>
+            </div>
+
+            <!-- Irrigation Advice -->
+            <div class="result-card irrigation-info">
+                <h3>💧 Irrigation Recommendations</h3>
+                <div id="irrigationContent"></div>
+            </div>
+
+            <!-- Seed Varieties -->
+            <div class="result-card varieties-info">
+                <h3>🌱 Recommended Seed Varieties</h3>
+                <div id="varietiesContent"></div>
+            </div>
+
+            <!-- Weather Graph -->
+            <div class="result-card">
+                <h3>📊 7-Day Weather Forecast</h3>
+                <div class="weather-graph" id="weatherGraph"></div>
+                <div class="forecast-container" id="forecastContainer"></div>
+            </div>
+
+            <!-- AI Advice -->
+            <div class="result-card ai-advice">
+                <h3>🤖 AI-Powered Agricultural Advice</h3>
+                <div class="content" id="aiAdviceContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analyzeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const region = document.getElementById('region').value;
+            const crop = document.getElementById('crop').value;
+            
+            if (!region || !crop) {
+                showError('Please select both region and crop');
+                return;
+            }
+            
+            showLoading(true);
+            hideError();
+            hideResults();
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ region, crop })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection.');
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
+            }
+        });
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('analyzeBtn').disabled = show;
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function hideResults() {
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+        
+        function formatAIResponse(text) {
+            // Convert markdown-style formatting to HTML
+            let formatted = text
+                // Convert headers
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                
+                // Convert bold text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                
+                // Convert italic text
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                
+                // Convert bullet points
+                .replace(/^• (.*$)/gm, '<li>$1</li>')
+                .replace(/^- (.*$)/gm, '<li>$1</li>')
+                
+                // Convert checkmarks
+                .replace(/^✓ (.*$)/gm, '<li class="checkmark">✓ $1</li>')
+                
+                // Convert emojis and special formatting
+                .replace(/📍|🌾|📅|🗓️|🌡️|💧|🌤️|🚰|📋|🏛️|🌱|⚠️|📞|🎯|📈|🐛|🌧️|📊|🏆|🛒|✅/g, '<span class="emoji">        function displayResults(data) {</span>')
+                
+                // Wrap consecutive list items in ul tags
+                .replace(/(<li>.*<\/li>\s*)+/gs, '<ul>        function displayResults(data) {</ul>')
+                
+                // Convert tables (basic markdown table support)
+                .replace(/\|(.+)\|\n\|[-\s|]+\|\n((\|.*\|\n?)*)/g, function(match, header, divider, rows) {
+                    let headerCells = header.split('|').map(cell => `<th>${cell.trim()}</th>`).join('');
+                    let rowsHtml = rows.split('\n').filter(row => row.trim())
+                        .map(row => {
+                            let cells = row.split('|').map(cell => `<td>${cell.trim()}</td>`).join('');
+                            return `<tr>${cells}</tr>`;
+                        }).join('');
+                    return `<table><thead><tr>${headerCells}</tr></thead><tbody>${rowsHtml}</tbody></table>`;
+                })
+                
+                // Convert line breaks
+                .replace(/\n/g, '<br>');
+            
+            return formatted;
+        }
+        
+        function displayResults(data) {
+            // Current Weather
+            const currentWeatherContent = document.getElementById('currentWeatherContent');
+            currentWeatherContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
+                    <div>
+                        <h4>🌡️ Temperature</h4>
+                        <p style="font-size: 2rem; font-weight: bold;">${data.current_weather.temperature}°C</p>
+                    </div>
+                    <div>
+                        <h4>💧 Humidity</h4>
+                        <p style="font-size: 2rem; font-weight: bold;">${data.current_weather.humidity}%</p>
+                    </div>
+                    <div>
+                        <h4>🌤️ Condition</h4>
+                        <p style="font-size: 1.2rem; text-transform: capitalize;">${data.current_weather.description}</p>
+                    </div>
+                    <div>
+                        <h4>💨 Wind Speed</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">${Math.round(data.current_weather.wind_speed || 0)} km/h</p>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <p><strong>📍 Location:</strong> ${data.region}, ${data.state || 'India'}</p>
+                    <p><strong>🗓️ Season:</strong> ${data.current_season || 'Current Season'}</p>
+                </div>
+            `;
+            
+            // Irrigation Content
+            const irrigationContent = document.getElementById('irrigationContent');
+            irrigationContent.innerHTML = `
+                <div class="formatted-content">
+                    ${formatAIResponse(data.irrigation_advice)}
+                </div>
+            `;
+            
+            // Varieties Content
+            const varietiesContent = document.getElementById('varietiesContent');
+            varietiesContent.innerHTML = `
+                <div class="formatted-content">
+                    ${formatAIResponse(data.seed_varieties)}
+                </div>
+            `;
+            
+            // Weather Graph
+            const weatherGraph = document.getElementById('weatherGraph');
+            if (data.weather_graph) {
+                weatherGraph.innerHTML = `<img src="data:image/png;base64,${data.weather_graph}" alt="Weather Forecast Graph">`;
+            } else {
+                weatherGraph.innerHTML = '<p>Weather graph unavailable</p>';
+            }
+            
+            // Forecast Container
+            const forecastContainer = document.getElementById('forecastContainer');
+            forecastContainer.innerHTML = data.forecast.map(day => `
+                <div class="forecast-day">
+                    <h4>${formatDate(day.date)}</h4>
+                    <div class="temp">${Math.round(day.temp)}°C</div>
+                    <div style="font-size: 0.8rem; margin: 5px 0;">
+                        ${Math.round(day.temp_min)}° / ${Math.round(day.temp_max)}°
+                    </div>
+                    <div style="font-size: 0.8rem; margin: 5px 0; color: #74b9ff;">
+                        💧 ${Math.round(day.precipitation_prob)}%
+                    </div>
+                    <div style="font-size: 0.8rem; margin: 5px 0; color: #00cec9;">
+                        💨 ${Math.round(day.wind_speed || 0)} km/h
+                    </div>
+                    <div class="desc">${day.description}</div>
+                </div>
+            `).join('');
+            
+            // AI Advice
+            const aiAdviceContent = document.getElementById('aiAdviceContent');
+            aiAdviceContent.innerHTML = `
+                <div class="formatted-content">
+                    ${formatAIResponse(data.comprehensive_advice)}
+                </div>
+            `;
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Scroll to results
+            setTimeout(() => {
+                document.getElementById('resultsSection').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }, 100);
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+    </script>
+</body>
+</html>

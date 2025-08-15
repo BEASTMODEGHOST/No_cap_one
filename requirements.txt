@@ -1,0 +1,10 @@
+Flask
+Flask-CORS
+google-generativeai
+requests
+matplotlib
+numpy
+python-dotenv
+python-dotenv
+beautifulsoup4
+lxml
