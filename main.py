@@ -246,12 +246,6 @@ def generate_dynamic_irrigation_advice(crop, region, weather_data):
 
         Please provide structured irrigation advice with the following sections:
 
-        ## IMMEDIATE IRRIGATION NEEDS
-        Should irrigation be done now? [Yes/No with clear reasoning]
-        Best timing: [Specific hours]
-        Duration: [How long]
-        Water quantity: [Amount per acre]
-
         ## 7-DAY IRRIGATION SCHEDULE
         Day 1: [Irrigation recommendation with timing]
         Day 2: [Irrigation recommendation with timing]
@@ -266,16 +260,6 @@ def generate_dynamic_irrigation_advice(crop, region, weather_data):
         • Local water availability factors
         • State-specific irrigation practices
         • Climate considerations for {region}
-
-        ## CROP GROWTH STAGE ANALYSIS
-        • Current growth stage for {crop} in {get_current_season()}
-        • Water requirements for this stage
-        • Critical irrigation periods ahead
-
-        ## EMERGENCY PROTOCOLS
-        • Actions if sudden rain occurs
-        • Steps if temperature spikes
-        • Drought management strategies
 
         Keep the format clean and structured. Use bullet points and clear headings.
         """
@@ -328,43 +312,9 @@ def generate_dynamic_seed_varieties(crop, region, weather_data):
         • [Variety 2]: [Specific benefits for {state}]
         • [Variety 3]: [Specific benefits for {state}]
 
-        **Popular Local Varieties:**
-        • [Variety 1]: [Why farmers prefer it]
-        • [Variety 2]: [Why farmers prefer it]
-
         ## WEATHER-ADAPTED CHOICES
+        • [Seed_variety] is suitable for your weather condition
 
-        **Heat Tolerant (for high temperatures):**
-        • [Variety]: [Temperature tolerance details]
-
-        **Drought Resistant:**
-        • [Variety]: [Water efficiency features]
-
-        **High Precipitation Tolerant:**
-        • [Variety]: [Waterlogging resistance]
-
-        ## SEED SOURCING IN {state}
-
-        **Government Sources:**
-        • State Seed Corporation outlets
-        • Agricultural cooperative societies
-        • Krishi Vigyan Kendra distribution
-        • Subsidy programs available
-
-        **Private Certified Dealers:**
-        • [Company 1]: [Contact/location info]
-        • [Company 2]: [Contact/location info]
-
-        **Quality Check Points:**
-        • Verify ISI certification mark
-        • Check germination rate (minimum 85%)
-        • Confirm manufacturing/expiry dates
-        • Ensure proper packaging
-
-        ## LOCAL CONTACTS
-        • {state} Agriculture Department: [For latest varieties]
-        • Nearest KVK: [For technical guidance]
-        • Seed testing lab: [For quality verification]
 
         Keep recommendations specific to {state} climate and proven successful in {region}.
         """
@@ -402,33 +352,12 @@ def generate_comprehensive_ai_advice(crop, region, weather_data, irrigation_advi
 
         Please provide detailed advice in the following structured format:
 
-        ## CROP MANAGEMENT STRATEGY
-
-        **Current Growth Stage:** [Stage for {crop} in {get_current_season()}]
-        **Key Activities This Week:**
-        • [Activity 1]: [Specific details]
-        • [Activity 2]: [Specific details]
-        • [Activity 3]: [Specific details]
-
-        **Field Maintenance:**
-        • Soil preparation: [Current needs]
-        • Plant spacing: [Recommendations]
-        • Weed management: [Control methods]
-
         ## PEST & DISEASE MANAGEMENT
 
         **Common Threats in {state} During {get_current_season()}:**
         • [Pest/Disease 1]: [Risk level] - [Prevention and treatment]
         • [Pest/Disease 2]: [Risk level] - [Prevention and treatment]
         • [Pest/Disease 3]: [Risk level] - [Prevention and treatment]
-
-        **Weather-Based Risks:**
-        • High humidity risks: [Specific diseases and prevention]
-        • Temperature effects: [Heat/cold stress management]
-
-        **Treatment Options:**
-        • Organic solutions: [Specific recommendations]
-        • Chemical options: [If necessary, with proper dosage]
 
         ## FERTILIZER RECOMMENDATIONS
 
@@ -446,71 +375,6 @@ def generate_comprehensive_ai_advice(crop, region, weather_data, irrigation_advi
         • Compost: [Local sources and usage]
         • Green manure: [Suitable options for {state}]
 
-        ## MARKET INTELLIGENCE
-
-        **Current Market Trends for {crop} in {state}:**
-        • Price range: [Current rates]
-        • Demand outlook: [Market predictions]
-        • Quality requirements: [What buyers want]
-
-        **Harvest & Sales Strategy:**
-        • Optimal harvest timing: [For maximum profit]
-        • Storage recommendations: [Post-harvest care]
-        • Marketing channels: [Best selling options]
-
-        **Government Support:**
-        • MSP (Minimum Support Price): [Current rates if applicable]
-        • Procurement centers: [Nearest locations]
-        • Required documentation: [What farmers need]
-
-        ## WEATHER-BASED ACTION PLAN
-
-        **Next 7 Days Actions:**
-        • Days 1-2: [Immediate activities based on weather]
-        • Days 3-4: [Mid-week preparations]
-        • Days 5-7: [Weekend activities]
-
-        **Risk Management:**
-        • Heavy rain protection: [Specific steps]
-        • Heat wave management: [Cooling strategies]
-        • Drought preparedness: [Water conservation]
-
-        ## GOVERNMENT SCHEMES & SUPPORT
-
-        **Central Schemes:**
-        • PM-KISAN: [Eligibility and benefits]
-        • Crop insurance (PMFBY): [Coverage details]
-        • Input subsidies: [Available support]
-
-        **{state} State Schemes:**
-        • [State scheme 1]: [Details and eligibility]
-        • [State scheme 2]: [Benefits available]
-        • Agricultural loans: [Interest rates and terms]
-
-        ## LOCAL RESOURCES
-
-        **Technical Support in {region}:**
-        • Krishi Vigyan Kendra: [Services available]
-        • Agricultural extension officer: [Contact method]
-        • Soil testing lab: [Location and services]
-
-        **Emergency Contacts:**
-        • {state} Kisan Call Center: [Helpline number]
-        • Weather advisory: [Information source]
-        • Pest/disease helpline: [Expert consultation]
-        • Market information: [Price updates]
-
-        ## WEEKLY ACTION SUMMARY
-
-        **This Week's Priorities:**
-        1. [Priority 1]
-        2. [Priority 2]
-        3. [Priority 3]
-
-        **Monitor Closely:**
-        • [What to watch]
-        • [When to take action]
-        • [Who to contact for help]
 
         Keep all recommendations specific to {region}, {state} conditions and current weather patterns.
         """
